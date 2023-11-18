@@ -16,14 +16,9 @@ import authApi, { GetUserAuthPayload } from '../../api/authApi';
 import { UserCircle } from 'lucide-react-native';
 
 export default function LoginPage({ navigation }: any) {
-  const user = useAppSelector(selectAuth);
   const dispatch = useAppDispatch();
   const [createUserAuth] = authApi.useCreateUserAuthMutation();
 
-  const { data } = authApi.useGetUserAuthQuery({ email: user?.email } as unknown as GetUserAuthPayload);
-
-  const usernameUser = data && data.username;
-  console.log("UserNameUser LoginPage = " + usernameUser);
 
   const onGoogleButtonPress = async () => {
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
@@ -59,18 +54,7 @@ export default function LoginPage({ navigation }: any) {
 
 
   const handleNavigate = async () => {
-    try {
-      const username = await AsyncStorage.getItem('userUsername');
-      console.log("Login Page username = ", username);
-
-      if (username === null || username === '') {
-        navigation.navigate('Avatar');
-      } else {
-        navigation.navigate('Home');
-      }
-    } catch (error) {
-      console.log('Login failed:', error);
-    }
+    navigation.navigate('CheckUser');
   };
 
   const isLoggedIn = async () => {

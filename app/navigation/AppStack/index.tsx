@@ -5,6 +5,7 @@ import {
   QuizPage,
   ShopPage,
   ResultPage,
+  CheckUserPage,
 } from '../../screens';
 import { LogoutButton } from '../../components';
 
@@ -17,6 +18,13 @@ export default function AppStack() {
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="CheckUser"
+        component={CheckUserPage}
+        options={{
+          headerShown: false, //menghilangkan header
+        }}
+      />
       {/* Avatar */}
       <Stack.Screen
         name="Avatar"

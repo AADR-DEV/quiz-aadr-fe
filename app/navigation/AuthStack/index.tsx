@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { LoginPage, AvatarPage } from '../../screens';
+import { LoginPage, AvatarPage, CheckUserPage } from '../../screens';
 import { selectAuth } from '../../store/auth';
 import { useAppSelector } from '../../hooks/useRedux';
 
