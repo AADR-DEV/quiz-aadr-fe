@@ -6,6 +6,8 @@ import {
   ShopPage,
   ResultPage,
   CheckUserPage,
+  FindingOpponentPage,
+  BuyAvatarPage,
 } from '../../screens';
 import { LogoutButton } from '../../components';
 
@@ -84,6 +86,32 @@ export default function AppStack() {
         options={{
           headerLeft: () => null, //menghilangkan arrow back
           headerTitle: 'Quiz',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#5a4ad3',
+          },
+        }}
+      />
+      {/* FindingEnemy */}
+      <Stack.Screen
+        name="FindingOpponent"
+        component={FindingOpponentPage}
+        options={{
+          headerLeft: () => null, //menghilangkan arrow back
+          headerTitle: 'Finding Opponent',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#5a4ad3',
+          },
+        }}
+      />
+      {/* FindingEnemy */}
+      <Stack.Screen
+        name="BuyAvatar"
+        component={BuyAvatarPage}
+        options={{
+          headerLeft: () => null, //menghilangkan arrow back
+          headerTitle: 'Avatars',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#5a4ad3',

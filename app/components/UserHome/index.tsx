@@ -1,9 +1,10 @@
-import { Box, Button, HStack, Link, LinkText, Text, VStack, View, Image, Icon, CalendarDaysIcon } from '@gluestack-ui/themed';
+import { Box, HStack, Link, LinkText, Text, VStack, View, Image, Icon, CalendarDaysIcon } from '@gluestack-ui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { AuthState, UserInfo, logout, selectAuth } from '../../store/auth';
+import { useAppSelector } from '../../hooks/useRedux';
+import { selectAuth } from '../../store/auth';
 import { AppLottieView, AvatarUser } from '..';
 import { Plus } from 'lucide-react-native';
+
 
 export default function UserHome({ navigation }: any) {
     // const { logout } = useContext(AuthContext);
@@ -48,7 +49,6 @@ export default function UserHome({ navigation }: any) {
 
                     </Box>
                 </Box>
-
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate('Shop');
@@ -57,7 +57,7 @@ export default function UserHome({ navigation }: any) {
                     <Box
                         bgColor="$secondaryBg"
                         rounded={'$3xl'}
-                        padding={'$2'}
+                        padding={'$1'}
                         width={100}
                         alignItems="center"
                         justifyContent="center"
@@ -96,7 +96,7 @@ export default function UserHome({ navigation }: any) {
                     }}
                     rezizeMode="contain"
                 />
-                <AvatarUser />
+                <AvatarUser navigation={navigation} />
             </Box>
         </View >
     );

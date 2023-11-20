@@ -8,11 +8,14 @@ import {
   Image,
   Button,
   ButtonText,
+  Avatar,
+  AvatarFallbackText,
+  HStack,
 } from '@gluestack-ui/themed';
-import { Touchable, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 
-export default function QuizPage({ navigation }) {
+export default function QuizPage({ navigation }): any {
   const valueAnswer = {
     answer1: false,
     answer2: false,
@@ -126,26 +129,40 @@ export default function QuizPage({ navigation }) {
               <Box
                 w="90%"
                 rounded={'$full'}
+                display="flex"
                 bgColor={getBackgroundColor(answerKey)}
                 borderColor={getBorderColor(answerKey)}
                 borderWidth={1}
                 padding="$2"
+                width={250}
                 role="button"
                 alignItems="center"
               >
-                <Text
-                  textAlign="left"
-                  ml={15}
-                  size="sm"
-                  color="gray"
-                  fontWeight="bold"
-                  width={250}
-                >
-                  {answerKey === 'answer1' ? 'Kucing' : ''}
-                  {answerKey === 'answer2' ? 'Singa' : ''}
-                  {answerKey === 'answer3' ? 'Marmut' : ''}
-                  {answerKey === 'answer4' ? 'Gajah' : ''}
-                </Text>
+                <HStack width={'100%'}>
+                  <Text
+                    textAlign="left"
+                    ml={15}
+                    size="sm"
+                    color="gray"
+                    fontWeight="bold"
+                    width={100}
+                  >
+                    {answerKey === 'answer1' ? 'Kucing' : ''}
+                    {answerKey === 'answer2' ? 'Singa' : ''}
+                    {answerKey === 'answer3' ? 'Marmut' : ''}
+                    {answerKey === 'answer4' ? 'Gajah' : ''}
+                  </Text>
+                  {selectedAnswer === answerKey ? (
+                    <Avatar
+                      width={20}
+                      height={20}
+                    >
+                      <AvatarFallbackText>Username</AvatarFallbackText>
+                    </Avatar>
+                  ) : (
+                    <Box></Box>
+                  )}
+                </HStack>
               </Box>
             </TouchableOpacity>
           ))}

@@ -51,7 +51,7 @@ export default function HomePage({ navigation }: any) {
             backgroundColor="$greenButton"
             width={'40%'}
             onPress={() => {
-              navigation.navigate('Quiz');
+              navigation.navigate('FindingOpponent');
             }}
 
           >

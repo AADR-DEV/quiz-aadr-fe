@@ -1,44 +1,46 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
     Input,
     Button,
-    InputField
-} from '@gluestack-ui/themed'
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
+    InputField,
+} from '@gluestack-ui/themed';
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { UserInfo, selectAuth, session } from '../../store/auth';
 import { authApi } from '../../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AlertAvatar from '../AlertAvatar';
 
 export default function SubmitUsername({ navigation, avatar }: any) {
-    const [username, setUsername] = React.useState<string>('')
+    const [username, setUsername] = useState('');
+    const [showAlertDialog, setShowAlertDialog] = useState(false);
 
-    const user = useAppSelector(selectAuth)
-
-    // const [createUse] = authApi.useCreateUserAuthMutation()
-    const [updateUserAuth] = authApi.useUpdateUserAuthMutation()
-
-
+    const user = useAppSelector(selectAuth);
+    const [updateUserAuth] = authApi.useUpdateUserAuthMutation();
     const dispatch = useAppDispatch();
 
     const handleSubmit = async () => {
+        if (username === '' || !avatar) {
+            setShowAlertDialog(true);
+            return;
+        }
+
         try {
             const userInfo: UserInfo = {
                 ...user,
                 avatar,
                 username,
-            }
+            };
 
             await AsyncStorage.setItem('userUsername', username);
-
-            updateUserAuth(userInfo)
+            updateUserAuth(userInfo);
             dispatch(session({ userInfo }));
+            navigation.navigate('Home');
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
     return (
         <View
@@ -54,6 +56,7 @@ export default function SubmitUsername({ navigation, avatar }: any) {
                 fontWeight="bold"
                 color='white'
             >Username</Text>
+
             <Input
                 rounded={'$2xl'}
                 width={'90%'}
@@ -67,14 +70,18 @@ export default function SubmitUsername({ navigation, avatar }: any) {
                     onChange={(e) => setUsername(e.nativeEvent.text)}
                 />
             </Input>
+
             <Button
                 rounded={'$2xl'}
                 backgroundColor="$greenButton"
-                // onPress={() => navigation.navigate('Home')}
-                onPress={() => handleSubmit().then(() => navigation.navigate('Home'))}
+                onPress={() => handleSubmit()}
             >
                 <Text>Continue</Text>
             </Button>
+
+            {showAlertDialog && (
+                <AlertAvatar showAlertDialog={showAlertDialog} setShowAlertDialog={setShowAlertDialog} />
+            )}
         </View>
-    )
+    );
 }

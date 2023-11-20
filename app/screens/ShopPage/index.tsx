@@ -10,6 +10,7 @@ import {
     ButtonText,
 } from '@gluestack-ui/themed';
 import { TouchableOpacity } from 'react-native';
+import { AvatarPremiumInfo } from '../../components';
 
 
 

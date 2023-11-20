@@ -17,12 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function AvatarPage({ navigation }: any) {
     const [selectedAvatar, setSelectedAvatar] = useState(null);
 
-    console.log(selectedAvatar);
-
     const Avatars = [
-        { key: 'free_fox', image: require('../../../assets/avatars/free_fox.png') },
-        { key: 'free_giraffe', image: require('../../../assets/avatars/free_giraffe.png') },
-        { key: 'free_goat', image: require('../../../assets/avatars/free_goat.png') },
+        { key: 'free_dog', image: require('../../../assets/avatars/free_dog.png') },
+        { key: 'free_owl', image: require('../../../assets/avatars/free_owl.png') },
+        { key: 'free_penguin', image: require('../../../assets/avatars/free_penguin.png') },
         { key: 'free_hen', image: require('../../../assets/avatars/free_hen.png') },
         { key: 'free_horse', image: require('../../../assets/avatars/free_horse.png') },
         { key: 'free_rabbit', image: require('../../../assets/avatars/free_rabbit.png') },

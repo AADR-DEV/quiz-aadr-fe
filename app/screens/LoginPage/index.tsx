@@ -40,7 +40,7 @@ export default function LoginPage({ navigation }: any) {
         avatar: result.user.photoURL,
         email: result.user.email,
         username: '',
-      };
+      }; //masukkan ke redux
 
       await AsyncStorage.setItem('userToken', idToken);
 
@@ -141,8 +141,6 @@ export default function LoginPage({ navigation }: any) {
             Login with Google
           </Text>
         </Button>
-
-
 
         <Text
           color="$secondaryBg"
