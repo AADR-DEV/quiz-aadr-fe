@@ -4,12 +4,17 @@ import { useAppSelector } from '../../hooks/useRedux';
 import { selectAuth } from '../../store/auth';
 import { AppLottieView, AvatarUser } from '..';
 import { Plus } from 'lucide-react-native';
+import { useEffect } from 'react';
 
 
-export default function UserHome({ navigation }: any) {
-    // const { logout } = useContext(AuthContext);
-
+export default function UserHome({ navigation, refreshTrigger }: any) {
     const user = useAppSelector(selectAuth)
+
+    console.log("UserHome = ", user);
+
+    useEffect(() => {
+        console.log("UserHome is refreshing");
+    }, [refreshTrigger]);
 
     return (
         <View
@@ -68,12 +73,13 @@ export default function UserHome({ navigation }: any) {
                         <Image
                             source={require('../../../assets/diamonds/starter_pack.png')}
                             alt="Diamond icon"
-                            size="2xs"
+                            width={20}
+                            height={20}
                             role="img"
                         />
                         <Text
                             color='$white'
-                        >999</Text>
+                        >20</Text>
                         <Icon
                             color="white"
                             size="md"
@@ -84,7 +90,6 @@ export default function UserHome({ navigation }: any) {
             <Box
                 alignItems="center"
                 display='flex'
-            // backgroundColor='$tertiaryBg'
             >
                 <AppLottieView
                     animation={require('./circle_avatar.json')}
@@ -96,7 +101,7 @@ export default function UserHome({ navigation }: any) {
                     }}
                     rezizeMode="contain"
                 />
-                <AvatarUser navigation={navigation} />
+                <AvatarUser navigation={navigation} refreshTrigger={refreshTrigger} />
             </Box>
         </View >
     );

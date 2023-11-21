@@ -14,9 +14,18 @@ import { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { AvatarPremiumInfo, SubmitUsername } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppSelector } from '../../hooks/useRedux';
+import { UserInfo, session, selectAuth } from '../../store/auth';
+import { useDispatch } from 'react-redux';
+import { authApi } from '../../api';
 
 export default function BuyAvatarPage({ navigation }: any) {
     const [selectedAvatar, setSelectedAvatar] = useState(null);
+    console.log(selectedAvatar, 'selected')
+    const user = useAppSelector(selectAuth);
+    // console.log('user = ', user)
+    const [updateUserAuth] = authApi.useUpdateUserAuthMutation();
+    const dispatch = useDispatch()
 
     const Avatars = [
         { key: 'free_dog', image: require('../../../assets/avatars/free_dog.png'), price: 'Free' },
@@ -47,6 +56,23 @@ export default function BuyAvatarPage({ navigation }: any) {
 
     const isAvatarSelected = (avatarName: string) => {
         return selectedAvatar === avatarName;
+    }
+
+    const handleSubmit = async () => {
+        try {
+            const userInfo: UserInfo = {
+                ...user,
+                avatar: selectedAvatar
+            };
+
+            await AsyncStorage.setItem('userAvatar', selectedAvatar);
+            updateUserAuth(userInfo);
+
+            dispatch(session({ userInfo }));
+            navigation.navigate('Home');
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -157,6 +183,7 @@ export default function BuyAvatarPage({ navigation }: any) {
                             width={'100%'}
                             size='sm'
                             fontWeight='bold'
+                            onPress={() => handleSubmit()}
                         >Buy</ButtonText>
                     </Button>
                 </Box>

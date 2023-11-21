@@ -2,25 +2,19 @@ import {
     View,
     Image,
     Icon,
+    Box
 } from "@gluestack-ui/themed";
 import { authApi } from "../../api";
 import { useAppSelector } from "../../hooks/useRedux";
 import { selectAuth } from "../../store/auth";
-import { GetUserAuthPayload, GetUserAuthResponse } from "../../api/authApi";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Settings } from 'lucide-react-native';
-import { useEffect } from "react";
+import { GetUserAuthPayload } from "../../api/authApi";
 
-export default function AvatarUser({ navigation, refreshTrigger }: any) {
+export default function AvatarPlayer() {
+
     const currentUser = useAppSelector(selectAuth); // Data dari Redux
-    const { data, refetch } = authApi.useGetUserAuthQuery({ email: currentUser?.email } as GetUserAuthPayload);
+    const { data } = authApi.useGetUserAuthQuery({ email: currentUser?.email } as GetUserAuthPayload);
 
     const avatarUser = data && data.avatar; // => Didapat dari get user di avatar
-    console.log("AvatarUser = " + avatarUser);
-
-    useEffect(() => {
-        refetch();
-    }, [refreshTrigger, refetch]);
 
     const Avatars = [
         { key: 'free_dog', image: require('../../../assets/avatars/free_dog.png') },
@@ -39,34 +33,16 @@ export default function AvatarUser({ navigation, refreshTrigger }: any) {
             {Avatars.map((avatar) => {
                 if (avatar && avatar.key === avatarUser) {
                     return (
-                        <TouchableOpacity
-                            key={avatar.key}
-                            onPress={() => {
-                                navigation.navigate('BuyAvatar');
-                            }}
-                        >
+                        <Box key={avatar.key}>
                             <Image
                                 source={avatar.image}
                                 alt="Logo"
                                 size="xl"
                                 role="img"
-                                position='absolute'
-                                height={80}
-                                width={80}
-                                top={-141}
-                                right={-40}
+                                width={130}
+                                height={130}
                             />
-                            <Icon
-                                as={Settings}
-                                size={"xl"}
-                                color="white"
-                                fontWeight="bold"
-                                alignSelf="flex-start"
-                                position='absolute'
-                                top={-85}
-                                right={-45}
-                            />
-                        </TouchableOpacity>
+                        </Box>
                     )
                 }
             })}

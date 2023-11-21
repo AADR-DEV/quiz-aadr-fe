@@ -40,13 +40,11 @@ export default function LoginPage({ navigation }: any) {
         avatar: result.user.photoURL,
         email: result.user.email,
         username: '',
-      }; //masukkan ke redux
+      };
 
       await AsyncStorage.setItem('userToken', idToken);
-
       await createUserAuth(userInfo);
       dispatch(login({ userInfo, isLoading: false }));
-
     } catch (error) {
       console.log('Login failed:', error);
     }

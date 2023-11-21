@@ -24,7 +24,7 @@ export default function AppNav() {
     }
 
     const userToken = user && userTokenFromStorage()
-
+    console.log('userToken', userToken)
 
     if (isLoading) {
         return (

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,174 +9,261 @@ import {
   Image,
   Button,
   ButtonText,
-  Avatar,
-  AvatarFallbackText,
-  HStack,
+  RadioGroup,
+  Radio,
+  RadioLabel,
+  ScrollView,
+  Spinner,
 } from '@gluestack-ui/themed';
-import { TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { questions as originalQuestions } from '../../api/dummyOption';
+import { AlertTimeOut, ScoreResult } from '../../components';
+import { ActivityIndicator } from 'react-native';
 
-export default function QuizPage({ navigation }): any {
-  const valueAnswer = {
-    answer1: false,
-    answer2: false,
-    answer3: true,
-    answer4: false,
-  };
+interface Question {
+  id: string;
+  image: string;
+  question: string;
+  trueans: string;
+  falseans_1: string;
+  falseans_2: string;
+  falseans_3: string;
+  options?: string[];
+}
 
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isAnswerChecked, setIsAnswerChecked] = useState(false);
+export default function QuizPage({ navigation }: any) {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [score, setScore] = useState(0);
+  const [finished, setFinished] = useState(false);
+  const [timer, setTimer] = useState(20);
+  const [showAlertDialog, setShowAlertDialog] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false); // State untuk loading
 
-  const handleChooseAnswer = answerKey => {
-    setSelectedAnswer(answerKey);
-  };
-
-  const handleNext = () => {
-    setIsAnswerChecked(true);
-    navigation.push('Result');
-  };
-
-  const getBorderColor = answerKey => {
-    return selectedAnswer === answerKey ? '$amber500' : 'gray';
-  };
-
-  const getBackgroundColor = answerKey => {
-    if (isAnswerChecked && selectedAnswer === answerKey) {
-      return valueAnswer[answerKey] ? '$greenButton' : '$redButton';
+  // Acak Jawaban
+  const shuffleOptions = (options: string[]): string[] => {
+    for (let i = options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [options[i], options[j]] = [options[j], options[i]];
     }
-    return 'transparent';
+    return options;
   };
+
+  // Acak Pertanyaan
+  useEffect(() => {
+    setIsLoading(true); // Aktifkan loading sebelum mengacak pertanyaan
+    const shuffledQuestions = originalQuestions
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 10)
+      .map(q => ({
+        ...q,
+        question: q.quetion, // Perbaiki 'quetion' menjadi 'question'
+        options: shuffleOptions([
+          q.trueans,
+          q.falseans_1,
+          q.falseans_2,
+          q.falseans_3
+        ])
+      }));
+    setQuestions(shuffledQuestions);
+
+    // Setelah berhasil memuat pertanyaan, nonaktifkan loading
+    setIsLoading(false);
+
+    // Waktu Kuis
+    const interval = setInterval(() => {
+      setTimer(prevTimer => {
+        if (prevTimer === 1) {
+          showAlertAndProceed();
+        }
+        return prevTimer > 1 ? prevTimer - 1 : 20;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentQuestionIndex]);
+
+
+  const showAlertAndProceed = () => {
+    setShowAlertDialog(true);
+  };
+
+  const handleAnswerChange = (value: string) => {
+    if (!selectedAnswer) {
+      setSelectedAnswer(value);
+    }
+  };
+
+  const getAnswerBackgroundColor = (option: string) => {
+    if (selectedAnswer === option) {
+      return option === questions[currentQuestionIndex].trueans ? '$greenButton' : '$redButton';
+    }
+    return '$tertiaryBg';
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedAnswer === questions[currentQuestionIndex].trueans) {
+      setScore(score + 10);
+    }
+
+    const nextIndex = currentQuestionIndex + 1;
+    if (nextIndex < questions.length) {
+      setIsLoading(true); // Aktifkan loading sebelum pindah ke pertanyaan berikutnya
+      setTimeout(() => {
+        setCurrentQuestionIndex(nextIndex);
+        setTimer(20); // Reset waktu untuk ke pertanyaan selanjutnya
+        setSelectedAnswer('');
+        setIsLoading(false); // Matikan loading setelah pindah ke pertanyaan berikutnya
+      }, 500); // Atur durasi loading (dalam milidetik)
+    } else {
+      setFinished(true);
+    }
+  };
+
+  if (finished) {
+    return (
+      <View
+        flex={1}
+        alignItems="center"
+        backgroundColor="$primaryBg"
+        gap={'$3'}
+        width={'100%'}
+        height={'100%'}
+      >
+        <ScoreResult score={score} navigation={navigation} />
+      </View>
+    );
+  }
 
   return (
-    <View
+    <ScrollView
       flex={1}
-      alignItems="center"
       backgroundColor="$primaryBg"
       gap={'$3'}
     >
-      <VStack
-        mt={'$5'}
-        space="xs"
-      >
-        <Progress
-          value={50}
-          w="$80"
-          h="$1"
-        >
-          <ProgressFilledTrack
-            h="$1"
-            bg="$amber500"
-          />
-        </Progress>
-        <Text
-          textAlign="center"
-          size="md"
-          color="white"
-          fontWeight="bold"
-        >
-          Question 5 of 10
-        </Text>
-      </VStack>
-
-      <Box
-        rounded={'$2xl'}
-        padding="$4"
-        justifyContent="center"
+      <View
+        flex={1}
         alignItems="center"
-        gap={'$2'}
-        bgColor="white"
-        width={'90%'}
-        height={'90%'}
+        backgroundColor="$primaryBg"
+        gap={'$3'}
       >
-        {/* Image */}
-        <Box>
-          <Image
-            w={150}
-            h={150}
-            rounded={'$2xl'}
-            source={{
-              uri: 'https://asset-a.grid.id/crop/0x0:0x0/760x600/photo/cewekbangetfoto/original/19235_foto-gabungan-hewan-hasil-photoshop-ini-lagi-viral-di-socmed.jpg',
-            }}
-            alt="image"
-            resizeMode="cover"
-            role="img"
-          />
-        </Box>
-        {/* Question */}
-        <Box
-          width={'100%'}
-          height={50}
+        <VStack
+          mt={'$5'}
+          space="xs"
         >
+          <Progress
+            value={(currentQuestionIndex + 1) * 10}
+            w="$80"
+            h="$1"
+          >
+            <ProgressFilledTrack
+              h="$1"
+              bg="$amber500"
+            />
+          </Progress>
           <Text
             textAlign="center"
-            size="sm"
-            color="black"
+            size="md"
+            color="white"
             fontWeight="bold"
           >
-            Hewan apa ini hayoo?
+            Question {currentQuestionIndex + 1} of 10
           </Text>
-        </Box>
-        {/* Answers */}
-        <Box
-          width={'100%'}
-          alignItems="center"
-          gap={'$2'}
-        >
-          {Object.keys(valueAnswer).map((answerKey, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleChooseAnswer(answerKey)}
+          {/* Timer Display */}
+          <Text
+            textAlign='center'
+            size="md"
+            color="white">
+            Time remaining: {timer} seconds
+          </Text>
+        </VStack>
+
+        {isLoading ? ( // Tampilkan loading jika isLoading aktif
+          <Spinner
+            size="large"
+            color="$amber500"
+            mt={'$20'}
+            alignSelf='center'
+          />
+        ) : (
+          <Box
+            rounded={'$2xl'}
+            padding="$4"
+            justifyContent="center"
+            alignItems="center"
+            gap={'$2'}
+            bgColor="$secondaryBg"
+            width={'90%'}
+            height={'90%'}
+          >
+            {/* Konten pertanyaan dan jawaban lainnya */}
+            <Text
+              fontSize="$xl"
+              fontWeight="bold"
+              color="white"
+            >Your Score: {score}</Text>
+            {/* Image */}
+            <Box>
+              <Image
+                w={150}
+                h={150}
+                rounded={'$2xl'}
+                source={{ uri: questions[currentQuestionIndex]?.image || 'default_img' }}
+                alt="image"
+                resizeMode="cover"
+                role="img"
+              />
+            </Box>
+            {/* Question */}
+            <Box
+              width={'100%'}
+              height={50}
             >
-              <Box
-                w="90%"
-                rounded={'$full'}
-                display="flex"
-                bgColor={getBackgroundColor(answerKey)}
-                borderColor={getBorderColor(answerKey)}
-                borderWidth={1}
-                padding="$2"
-                width={250}
-                role="button"
-                alignItems="center"
+              <Text
+                textAlign="center"
+                size="sm"
+                color="white"
+                fontWeight="bold"
               >
-                <HStack width={'100%'}>
-                  <Text
-                    textAlign="left"
-                    ml={15}
-                    size="sm"
-                    color="gray"
-                    fontWeight="bold"
-                    width={100}
-                  >
-                    {answerKey === 'answer1' ? 'Kucing' : ''}
-                    {answerKey === 'answer2' ? 'Singa' : ''}
-                    {answerKey === 'answer3' ? 'Marmut' : ''}
-                    {answerKey === 'answer4' ? 'Gajah' : ''}
-                  </Text>
-                  {selectedAnswer === answerKey ? (
-                    <Avatar
-                      width={20}
-                      height={20}
-                    >
-                      <AvatarFallbackText>Username</AvatarFallbackText>
-                    </Avatar>
-                  ) : (
-                    <Box></Box>
-                  )}
-                </HStack>
-              </Box>
-            </TouchableOpacity>
-          ))}
-        </Box>
-        <Button
-          rounded={'$full'}
-          bg="$amber500"
-          size="sm"
-          onPress={handleNext}
-        >
-          <ButtonText>Next</ButtonText>
-        </Button>
-      </Box>
-    </View>
+                {questions[currentQuestionIndex]?.question}
+              </Text>
+            </Box>
+            {/* Answers */}
+            <Box
+              width={'100%'}
+              alignItems="center"
+              gap={'$2'}
+            >
+              <RadioGroup onChange={handleAnswerChange} value={selectedAnswer}>
+                <VStack
+                  gap={'$2'}
+                >
+                  {questions[currentQuestionIndex]?.options?.map((option, index) => (
+                    <Radio key={index} value={option}>
+                      <RadioLabel
+                        backgroundColor={getAnswerBackgroundColor(option)}
+                        padding={'$3'}
+                        rounded={'$md'}
+                        width={'100%'}
+                        color="white"
+                      > {option} </RadioLabel>
+                    </Radio>
+                  ))}
+                </VStack>
+              </RadioGroup>
+            </Box>
+            <Button
+              rounded={'$full'}
+              bg="$amber500"
+              size="sm"
+              onPress={handleNextQuestion}
+            >
+              <ButtonText>Next</ButtonText>
+            </Button>
+          </Box>
+        )}
+
+        <AlertTimeOut showAlertDialog={showAlertDialog} setShowAlertDialog={setShowAlertDialog} handleNextQuestion={handleNextQuestion} />
+      </View>
+    </ScrollView>
   );
 }

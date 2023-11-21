@@ -7,5 +7,21 @@ import LogoutButton from "./LogoutButton";
 import AvatarUser from "./AvatarUser";
 import Loading from "./Loading";
 import AlertAvatar from "./AlertAvatar";
+import ScoreResult from "./ScoreResult";
+import AlertTimeOut from "./AlertTimeOut";
+import AvatarPlayer from "./AvatarPlayer";
 
-export { AppLottieView, AvatarPremiumInfo, SubmitUsername, UserHome, LeaderBoard, LogoutButton, AvatarUser, Loading, AlertAvatar };
+export {
+    AppLottieView,
+    AvatarPremiumInfo,
+    SubmitUsername,
+    UserHome,
+    LeaderBoard,
+    LogoutButton,
+    AvatarUser,
+    Loading,
+    AlertAvatar,
+    ScoreResult,
+    AlertTimeOut,
+    AvatarPlayer
+};

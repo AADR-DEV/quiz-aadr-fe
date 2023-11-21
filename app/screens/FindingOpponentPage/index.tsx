@@ -35,7 +35,7 @@ export default function FindingOpponentPage({ navigation }: any) {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Quiz'); // replacing page with countdown
-    }, 6000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
@@ -80,27 +80,27 @@ export default function FindingOpponentPage({ navigation }: any) {
               height={40}
               bgColor="$tertiaryButton"
             >
-              <AvatarFallbackText>User Name</AvatarFallbackText>
+              <AvatarFallbackText>Guswandi</AvatarFallbackText>
             </Avatar>
             <Avatar
               width={40}
               height={40}
               bgColor="red"
             >
-              <AvatarFallbackText>User Name</AvatarFallbackText>
+              <AvatarFallbackText>Dita</AvatarFallbackText>
             </Avatar>
             <Avatar
               width={40}
               height={40}
               bgColor="$tertiaryButton"
             >
-              <AvatarFallbackText>User Name</AvatarFallbackText>
+              <AvatarFallbackText>Akbar</AvatarFallbackText>
             </Avatar>
             <Avatar
               width={40}
               height={40}
             >
-              <AvatarFallbackText>User Name</AvatarFallbackText>
+              <AvatarFallbackText>Reza</AvatarFallbackText>
             </Avatar>
           </HStack>
 
@@ -108,8 +108,9 @@ export default function FindingOpponentPage({ navigation }: any) {
             width={130}
             height={130}
           >
-            <AvatarFallbackText>User Name</AvatarFallbackText>
+            <AvatarFallbackText>Kok Ngga Mau</AvatarFallbackText>
           </Avatar>
+
           <AppLottieView
             animation={require('./Loading-dots.json')}
             autoPlay
@@ -120,11 +121,6 @@ export default function FindingOpponentPage({ navigation }: any) {
             }}
             bgColor="red"
           />
-          {/* <Image
-            source={require('../FindingOpponentPage/finding.gif')}
-            style={styles.search}
-            role="img"
-          /> */}
           <Button
             rounded={'$2xl'}
             backgroundColor="$tertiaryButton"

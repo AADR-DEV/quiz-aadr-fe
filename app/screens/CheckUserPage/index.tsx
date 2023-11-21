@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from '@gluestack-ui/themed';
 import { useAppSelector } from '../../hooks/useRedux';
 import { selectAuth } from '../../store/auth';
 import authApi, { GetUserAuthPayload } from '../../api/authApi';
 import { Loading } from '../../components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CheckUserPage({ navigation }: any) {
     const user = useAppSelector(selectAuth);
@@ -11,6 +12,7 @@ export default function CheckUserPage({ navigation }: any) {
 
     const usernameUser = data && data.username;
 
+    //Android13
     if (!isLoading) {
         if (usernameUser === null || usernameUser === '' || usernameUser === undefined) {
             navigation.navigate('Avatar');
@@ -18,6 +20,11 @@ export default function CheckUserPage({ navigation }: any) {
             navigation.navigate('Home');
         }
     }
+
+    AsyncStorage.getItem('userToken')
+        .then(token => {
+            console.log("CheckUserPage token = ", token);
+        });
 
     return (
         <View

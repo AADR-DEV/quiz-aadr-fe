@@ -14,9 +14,6 @@ import {
     Button
 } from "@gluestack-ui/themed";
 
-
-
-
 export default function AlertAvatar({ showAlertDialog, setShowAlertDialog }: any) {
     return (
         <AlertDialog
