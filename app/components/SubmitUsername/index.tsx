@@ -12,16 +12,15 @@ import { authApi } from '../../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertAvatar from '../AlertAvatar';
 
-export default function SubmitUsername({ navigation, avatar }: any) {
+export default function SubmitUsername({ navigation, mainAvatar }: any) {
     const [username, setUsername] = useState('');
     const [showAlertDialog, setShowAlertDialog] = useState(false);
-
     const user = useAppSelector(selectAuth);
     const [updateUserAuth] = authApi.useUpdateUserAuthMutation();
     const dispatch = useAppDispatch();
 
     const handleSubmit = async () => {
-        if (username === '' || !avatar) {
+        if (username === '' || !mainAvatar) {
             setShowAlertDialog(true);
             return;
         }
@@ -29,8 +28,10 @@ export default function SubmitUsername({ navigation, avatar }: any) {
         try {
             const userInfo: UserInfo = {
                 ...user,
-                avatar,
                 username,
+                mainAvatar,
+                avatars: [],
+                total_diamonds: 0,
             };
 
             await AsyncStorage.setItem('userUsername', username);

@@ -5,12 +5,17 @@ import { selectAuth } from '../../store/auth';
 import { AppLottieView, AvatarUser } from '..';
 import { Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
+import { authApi } from '../../api';
+import { GetUserAuthPayload } from '../../api/authApi';
 
 
 export default function UserHome({ navigation, refreshTrigger }: any) {
-    const user = useAppSelector(selectAuth)
+    const user = useAppSelector(selectAuth);
+    const { data } = authApi.useGetUserAuthQuery({ email: user?.email } as GetUserAuthPayload);
 
-    console.log("UserHome = ", user);
+    console.log("user = " + data);
+    const userDiamonds = data && data.total_diamonds; // => Didapat dari get user di avatar
+    console.log("userDiamonds = " + userDiamonds);
 
     useEffect(() => {
         console.log("UserHome is refreshing");
@@ -79,7 +84,7 @@ export default function UserHome({ navigation, refreshTrigger }: any) {
                         />
                         <Text
                             color='$white'
-                        >20</Text>
+                        >{userDiamonds}</Text>
                         <Icon
                             color="white"
                             size="md"

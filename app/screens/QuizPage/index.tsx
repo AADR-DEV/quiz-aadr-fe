@@ -14,10 +14,12 @@ import {
   RadioLabel,
   ScrollView,
   Spinner,
+  Avatar,
+  AvatarFallbackText,
 } from '@gluestack-ui/themed';
 import { questions as originalQuestions } from '../../api/dummyOption';
-import { AlertTimeOut, ScoreResult } from '../../components';
-import { ActivityIndicator } from 'react-native';
+import { AlertTimeOut, ScoreResult, Timer } from '../../components';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 
 interface Question {
   id: string;
@@ -54,7 +56,7 @@ export default function QuizPage({ navigation }: any) {
     setIsLoading(true); // Aktifkan loading sebelum mengacak pertanyaan
     const shuffledQuestions = originalQuestions
       .sort(() => 0.5 - Math.random())
-      .slice(0, 10)
+      .slice(0, 5)
       .map(q => ({
         ...q,
         question: q.quetion, // Perbaiki 'quetion' menjadi 'question'
@@ -90,8 +92,19 @@ export default function QuizPage({ navigation }: any) {
   const handleAnswerChange = (value: string) => {
     if (!selectedAnswer) {
       setSelectedAnswer(value);
+      if (value === questions[currentQuestionIndex].trueans) {
+        // Jika jawaban benar, tambahkan poin tambahan (0.5 kali waktu yang tersisa)
+        const additionalScore = timer * 1;
+        setScore(score + additionalScore);
+      } else {
+        // Jika jawaban salah, kurangkan waktu dari timer (jika waktu lebih dari 5 detik)
+        if (timer > 5) {
+          setTimer(timer - 5);
+        }
+      }
     }
   };
+
 
   const getAnswerBackgroundColor = (option: string) => {
     if (selectedAnswer === option) {
@@ -102,7 +115,7 @@ export default function QuizPage({ navigation }: any) {
 
   const handleNextQuestion = () => {
     if (selectedAnswer === questions[currentQuestionIndex].trueans) {
-      setScore(score + 10);
+      setScore(score + 0);
     }
 
     const nextIndex = currentQuestionIndex + 1;
@@ -145,13 +158,14 @@ export default function QuizPage({ navigation }: any) {
         alignItems="center"
         backgroundColor="$primaryBg"
         gap={'$3'}
+        paddingVertical={'$5'}
       >
         <VStack
           mt={'$5'}
           space="xs"
         >
           <Progress
-            value={(currentQuestionIndex + 1) * 10}
+            value={(currentQuestionIndex + 1) * 20}
             w="$80"
             h="$1"
           >
@@ -166,15 +180,15 @@ export default function QuizPage({ navigation }: any) {
             color="white"
             fontWeight="bold"
           >
-            Question {currentQuestionIndex + 1} of 10
+            Question {currentQuestionIndex + 1} of 5
           </Text>
           {/* Timer Display */}
-          <Text
+          {/* <Text
             textAlign='center'
             size="md"
             color="white">
             Time remaining: {timer} seconds
-          </Text>
+          </Text> */}
         </VStack>
 
         {isLoading ? ( // Tampilkan loading jika isLoading aktif
@@ -188,7 +202,7 @@ export default function QuizPage({ navigation }: any) {
           <Box
             rounded={'$2xl'}
             padding="$4"
-            justifyContent="center"
+            // justifyContent="center"
             alignItems="center"
             gap={'$2'}
             bgColor="$secondaryBg"
@@ -196,11 +210,42 @@ export default function QuizPage({ navigation }: any) {
             height={'90%'}
           >
             {/* Konten pertanyaan dan jawaban lainnya */}
-            <Text
-              fontSize="$xl"
-              fontWeight="bold"
-              color="white"
-            >Your Score: {score}</Text>
+            <Box
+              flexDirection='row'
+              justifyContent='center'
+              alignItems='center'
+              gap={'$3'}
+              width={'100%'}
+            >
+              <Box
+                my={'$2'}
+                alignSelf='center'
+                position='absolute'
+                left={0}
+              >
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={20}
+                  colors={['#95FF66', '#FFC2A6', '#FF6B5E', '#FF0000']}
+                  colorsTime={[20, 15, 10, 0]}
+                  size={30}
+                  strokeWidth={3}
+                >
+                  {({ remainingTime }) =>
+                    <Text
+                      fontSize={13}
+                      color='white'
+                    >
+                      {remainingTime}
+                    </Text>}
+                </CountdownCircleTimer>
+              </Box>
+              <Text
+                fontSize="$xl"
+                fontWeight="bold"
+                color="white"
+              >Your Score: {score}</Text>
+            </Box>
             {/* Image */}
             <Box>
               <Image
@@ -238,15 +283,45 @@ export default function QuizPage({ navigation }: any) {
                   gap={'$2'}
                 >
                   {questions[currentQuestionIndex]?.options?.map((option, index) => (
-                    <Radio key={index} value={option}>
-                      <RadioLabel
-                        backgroundColor={getAnswerBackgroundColor(option)}
-                        padding={'$3'}
-                        rounded={'$md'}
-                        width={'100%'}
-                        color="white"
-                      > {option} </RadioLabel>
-                    </Radio>
+                    <Box>
+                      <Radio key={index} value={option}>
+                        <RadioLabel
+                          backgroundColor={getAnswerBackgroundColor(option)}
+                          padding={'$3'}
+                          rounded={'$md'}
+                          width={'100%'}
+                          color="white"
+                          justifyContent='space-between'
+                          flexDirection='row'
+                        >
+                          <Box
+                            flexDirection='row'
+                            alignItems='center'
+                            justifyContent='space-between'
+                            width={400}
+                          >
+                            <Box
+                              width={200}
+                            >
+                              <Text
+                                color='white'
+                              >
+                                {option}
+                              </Text>
+                            </Box>
+                            <Box
+                              width={200}
+                            >
+                              <Avatar
+                                size='xs'
+                              >
+                                <AvatarFallbackText>{option}</AvatarFallbackText>
+                              </Avatar>
+                            </Box>
+                          </Box>
+                        </RadioLabel>
+                      </Radio>
+                    </Box>
                   ))}
                 </VStack>
               </RadioGroup>

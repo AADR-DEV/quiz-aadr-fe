@@ -40,6 +40,7 @@ export default function LoginPage({ navigation }: any) {
         avatar: result.user.photoURL,
         email: result.user.email,
         username: '',
+        total_diamonds: 0,
       };
 
       await AsyncStorage.setItem('userToken', idToken);

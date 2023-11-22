@@ -23,5 +23,5 @@ export {
     AlertAvatar,
     ScoreResult,
     AlertTimeOut,
-    AvatarPlayer
+    AvatarPlayer,
 };

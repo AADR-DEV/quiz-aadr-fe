@@ -16,7 +16,7 @@ export default function HomePage({ navigation }: any) {
 
   //Untuk Refresh ketika ditarik kebawah
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
+    setRefreshing(false);
     setRefreshTrigger(prev => prev + 1);
 
     try {

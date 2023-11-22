@@ -5,10 +5,12 @@ import { authApi } from '../api';
 import { GetUserAuthResponse } from '../api/authApi';
 
 export type UserInfo = {
-  email: string | null,
   name: string | null,
-  avatar: string | null,
   username: string | null,
+  email: string | null,
+  mainAvatar: string | null,
+  avatars: string[];
+  total_diamonds: number,
 }
 
 export type AuthState = {
@@ -19,10 +21,12 @@ export type AuthState = {
 export const initialState: AuthState = {
   isLoading: false,
   userInfo: {
-    email: '',
     name: '',
-    avatar: '',
     username: '',
+    email: '',
+    mainAvatar: '',
+    avatars: [],
+    total_diamonds: 0,
   },
 };
 
