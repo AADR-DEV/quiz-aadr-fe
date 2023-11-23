@@ -36,8 +36,10 @@ export default function LoginPage({ navigation }: any) {
       const idToken = await result.user.getIdToken();
 
       const userInfo: UserInfo = {
+        id: '',
         name: result.user.displayName,
-        avatar: result.user.photoURL,
+        mainAvatar: result.user.photoURL,
+        avatars: [],
         email: result.user.email,
         username: '',
         total_diamonds: 0,

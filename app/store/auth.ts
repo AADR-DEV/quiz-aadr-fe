@@ -5,6 +5,7 @@ import { authApi } from '../api';
 import { GetUserAuthResponse } from '../api/authApi';
 
 export type UserInfo = {
+  id: string,
   name: string | null,
   username: string | null,
   email: string | null,
@@ -21,6 +22,7 @@ export type AuthState = {
 export const initialState: AuthState = {
   isLoading: false,
   userInfo: {
+    id: '',
     name: '',
     username: '',
     email: '',
@@ -43,7 +45,6 @@ export const authSlice = createSlice({
       state.userInfo = null
     },
     session: (state: Pick<AuthState, 'userInfo'>, action: PayloadAction<Pick<AuthState, 'userInfo'>>) => {
-      // Ensure userInfo is not null before accessing it
       if (state.userInfo && action.payload.userInfo) {
         state.userInfo.username = action.payload.userInfo.username;
       }

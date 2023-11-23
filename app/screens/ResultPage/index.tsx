@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Box, Text, VStack, Image, Button } from '@gluestack-ui/themed';
+import { View, Box, Text, VStack, Image, Button, AvatarImage, Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import { AppLottieView } from '../../components';
 
-export default function ResultPage({ navigation }) {
+export default function ResultPage({ navigation }: any) {
   return (
     <View
       backgroundColor="$primaryBg"

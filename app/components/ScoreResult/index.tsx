@@ -1,3 +1,4 @@
+import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@gluestack-ui/themed";
 import { Button, ButtonText, Text } from "@gluestack-ui/themed";
 import { Box } from "@gluestack-ui/themed";
 
@@ -15,6 +16,20 @@ export default function ScoreResult({ score, navigation }: any) {
                 fontSize="$xl"
                 color='white'
             >Congratulations!</Text>
+            <Box
+                alignItems="flex-start"
+                width={"80%"}
+                padding={5}
+                bg="$tertiaryBg"
+                rounded={"$lg"}
+            >
+                <Avatar
+                    size='md'
+                >
+                    <AvatarFallbackText>Nurohman Ibnu</AvatarFallbackText>
+
+                </Avatar>
+            </Box>
             <Text
                 fontWeight="bold"
                 fontSize="$xl"

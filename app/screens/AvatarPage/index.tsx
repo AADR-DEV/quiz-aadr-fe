@@ -1,17 +1,9 @@
-import {
-    View,
-    Text,
-    Box,
-    VStack,
-    HStack,
-    Image
-} from '@gluestack-ui/themed';
+import { View, Text, Box, VStack, HStack, Image } from '@gluestack-ui/themed';
 import { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { AvatarPremiumInfo, SubmitUsername } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authApi } from '../../api';
-
 
 interface AvatarCategory {
     id: string;
@@ -24,9 +16,12 @@ interface AvatarCategory {
 
 export default function AvatarPage({ navigation }: any) {
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+    const [selectedAvatarId, setSelectedAvatarId] = useState<string>('');
     const { data: avatarListCategory } = authApi.useGetAvatarListQuery();
     const [avatarList, setAvatarList] = useState<AvatarCategory[]>([]);
 
+    console.log(selectedAvatar);
+    console.log(selectedAvatarId);
 
     const chunkArray = (array: any[], chunkSize: number) => {
         const chunks = [];
@@ -38,14 +33,23 @@ export default function AvatarPage({ navigation }: any) {
 
     const handleChooseAvatar = (avatarName: string | null) => {
         // Menghapus efek perubahan dari semua avatar
-        setAvatarList(prevAvatarList => prevAvatarList.map(avatar => ({ ...avatar, isSelected: false })));
+        setAvatarList(prevAvatarList =>
+            prevAvatarList.map(avatar => ({ ...avatar, isSelected: false })),
+        );
 
         if (avatarName) {
-            const selectedAvatar = avatarList.find(avatar => avatar.name === avatarName);
+            const selectedAvatar = avatarList.find(
+                avatar => avatar.name === avatarName,
+            );
             if (selectedAvatar) {
                 // Menambahkan efek perubahan hanya pada avatar yang dipilih
                 setSelectedAvatar(selectedAvatar.url);
-                setAvatarList(prevAvatarList => prevAvatarList.map(avatar => avatar.name === avatarName ? { ...avatar, isSelected: true } : avatar));
+                setSelectedAvatarId(selectedAvatar.id);
+                setAvatarList(prevAvatarList =>
+                    prevAvatarList.map(avatar =>
+                        avatar.name === avatarName ? { ...avatar, isSelected: true } : avatar,
+                    ),
+                );
             }
         } else {
             setSelectedAvatar(null);
@@ -57,7 +61,7 @@ export default function AvatarPage({ navigation }: any) {
             const token = await AsyncStorage.getItem('userToken');
             if (token) {
                 const username = await AsyncStorage.getItem('userUsername');
-                console.log("Login Page username = ", username);
+                console.log('Login Page username = ', username);
                 if (username === null || username === '') {
                     navigation.navigate('Avatar');
                 } else {
@@ -86,58 +90,54 @@ export default function AvatarPage({ navigation }: any) {
     }, [avatarListCategory]);
 
     return (
-        <View
-            backgroundColor="$primaryBg"
-            flex={1}
-            alignItems="center"
-        >
+        <View backgroundColor="$primaryBg" flex={1} alignItems="center">
             <Box
-                rounded={"$2xl"}
+                rounded={'$2xl'}
                 padding="$4"
                 justifyContent="center"
                 alignItems="center"
-                gap={"$2"}
-                bgColor='$secondaryBg'
-                width={"90%"}
-                mt={'$5'}
-            >
-                <Text
-                    fontSize="$xl"
-                    fontWeight="bold"
-                    color='white'
-                >Choose Free Avatar</Text>
+                gap={'$2'}
+                bgColor="$secondaryBg"
+                width={'90%'}
+                mt={'$5'}>
+                <Text fontSize="$xl" fontWeight="bold" color="white">
+                    Choose Free Avatar
+                </Text>
                 <Box padding={5}>
                     {chunkArray(avatarList, 3).map((row, rowIndex) => (
-                        <HStack key={rowIndex} space={"md"} justifyContent='center' my={"$1"}>
+                        <HStack
+                            key={rowIndex}
+                            space={'md'}
+                            justifyContent="center"
+                            my={'$1'}>
                             {row.map((avatar: AvatarCategory) => (
-                                <VStack key={avatar.id} w="30%" space={"md"} alignSelf="center" >
+                                <VStack key={avatar.id} w="30%" space={'md'} alignSelf="center">
                                     <TouchableOpacity
                                         onPress={() => handleChooseAvatar(avatar.name)}>
                                         <Box
-                                            backgroundColor={avatar.isSelected ? '$primaryBg' : 'transparent'}
+                                            backgroundColor={
+                                                avatar.isSelected ? '$primaryBg' : 'transparent'
+                                            }
                                             padding={avatar.isSelected ? 2 : 0}
                                             rounded={avatar.isSelected ? '$2xl' : '$none'}
-                                            justifyContent='center'
-                                            alignItems='center'
-                                            width={80}
-                                        >
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            width={80}>
                                             <Image
                                                 source={{ uri: avatar.url }}
                                                 style={{ width: 50, height: 50, borderRadius: 20 }}
-                                                role='img'
+                                                role="img"
                                                 alt={avatar.name}
                                             />
-                                            <Text
-                                                fontSize="$sm"
-                                                textAlign='center'
-                                                color='white'
-                                            >
+                                            <Text fontSize="$sm" textAlign="center" color="white">
                                                 {avatar.name
                                                     .split('_')
                                                     .filter((word, index) => index > 0)
-                                                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                                                    .join(' ')
-                                                }
+                                                    .map(
+                                                        word =>
+                                                            word.charAt(0).toUpperCase() + word.slice(1),
+                                                    )
+                                                    .join(' ')}
                                             </Text>
                                         </Box>
                                     </TouchableOpacity>
@@ -150,8 +150,9 @@ export default function AvatarPage({ navigation }: any) {
                 <SubmitUsername
                     navigation={navigation}
                     mainAvatar={selectedAvatar}
+                    avatarId={selectedAvatarId}
                 />
             </Box>
-        </View >
-    )
+        </View>
+    );
 }

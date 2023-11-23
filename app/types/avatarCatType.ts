@@ -7,3 +7,8 @@ export type AvatarCat = {
         type: String,
     }
 }
+
+export type AvatarInfo = {
+    userId: String | undefined,
+    avatarCategoryId: String,
+}

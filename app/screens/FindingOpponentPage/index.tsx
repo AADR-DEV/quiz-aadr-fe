@@ -9,12 +9,17 @@ import {
   Button,
   Progress,
   ProgressFilledTrack,
+  AvatarImage,
 } from '@gluestack-ui/themed';
 import React, { useEffect, useState } from 'react';
 import { ImageBackground, StyleSheet } from 'react-native';
-import { AppLottieView } from '../../components';
+import { AppLottieView, AvatarPlayer, AvatarUser } from '../../components';
+import { useAppSelector } from '../../hooks/useRedux';
+import { selectAuth } from '../../store/auth';
 
 export default function FindingOpponentPage({ navigation }: any) {
+  const user = useAppSelector(selectAuth);
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -104,12 +109,22 @@ export default function FindingOpponentPage({ navigation }: any) {
             </Avatar>
           </HStack>
 
-          <Avatar
-            width={130}
-            height={130}
+          <Box
+            width={'100%'}
+            justifyContent='center'
+            alignItems='center'
           >
-            <AvatarFallbackText>Kok Ngga Mau</AvatarFallbackText>
-          </Avatar>
+            <Image
+              size='xl'
+              source={user ? { uri: user.mainAvatar } : require('../../../assets/avatars/free_dog.png')}
+            />
+          </Box>
+          <Text
+            fontWeight='bold'
+            fontSize="$lg"
+            color="white"
+            my={'$2'}
+          >Lets Play..{user?.username}!!</Text>
 
           <AppLottieView
             animation={require('./Loading-dots.json')}

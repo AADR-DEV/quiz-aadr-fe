@@ -16,10 +16,13 @@ import {
   Spinner,
   Avatar,
   AvatarFallbackText,
+  AvatarImage,
 } from '@gluestack-ui/themed';
 import { questions as originalQuestions } from '../../api/dummyOption';
-import { AlertTimeOut, ScoreResult, Timer } from '../../components';
+import { AlertTimeOut, ScoreResult } from '../../components';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import { useAppSelector } from '../../hooks/useRedux';
+import { selectAuth } from '../../store/auth';
 
 interface Question {
   id: string;
@@ -41,6 +44,7 @@ export default function QuizPage({ navigation }: any) {
   const [timer, setTimer] = useState(20);
   const [showAlertDialog, setShowAlertDialog] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false); // State untuk loading
+  const user = useAppSelector(selectAuth);
 
   // Acak Jawaban
   const shuffleOptions = (options: string[]): string[] => {
@@ -52,6 +56,7 @@ export default function QuizPage({ navigation }: any) {
   };
 
   // Acak Pertanyaan
+  //>>>> Default acak tanpa enemy
   useEffect(() => {
     setIsLoading(true); // Aktifkan loading sebelum mengacak pertanyaan
     const shuffledQuestions = originalQuestions
@@ -77,6 +82,7 @@ export default function QuizPage({ navigation }: any) {
       setTimer(prevTimer => {
         if (prevTimer === 1) {
           showAlertAndProceed();
+          handleNextQuestion();
         }
         return prevTimer > 1 ? prevTimer - 1 : 20;
       });
@@ -291,32 +297,48 @@ export default function QuizPage({ navigation }: any) {
                           rounded={'$md'}
                           width={'100%'}
                           color="white"
-                          justifyContent='space-between'
                           flexDirection='row'
                         >
                           <Box
                             flexDirection='row'
                             alignItems='center'
-                            justifyContent='space-between'
                             width={400}
                           >
                             <Box
-                              width={200}
+                              width={150}
                             >
                               <Text
                                 color='white'
+                                size='sm'
                               >
                                 {option}
                               </Text>
                             </Box>
                             <Box
-                              width={200}
+                              width={90}
+                              alignItems='center'
+                              justifyContent='center'
+                              flexDirection='row'
+                              gap={'$1'}
                             >
+                              {/* Avatar Enemy */}
                               <Avatar
                                 size='xs'
+                                bgColor="$amber600"
                               >
                                 <AvatarFallbackText>{option}</AvatarFallbackText>
                               </Avatar>
+                              {/* Avatar Player */}
+                              {user && selectedAnswer === option && (
+                                <Avatar
+                                  size='xs'
+                                >
+                                  <AvatarImage
+                                    source={user ? { uri: user.mainAvatar } : require('../../../assets/avatars/free_dog.png')}
+                                  >
+                                  </AvatarImage>
+                                </Avatar>
+                              )}
                             </Box>
                           </Box>
                         </RadioLabel>
@@ -337,7 +359,7 @@ export default function QuizPage({ navigation }: any) {
           </Box>
         )}
 
-        <AlertTimeOut showAlertDialog={showAlertDialog} setShowAlertDialog={setShowAlertDialog} handleNextQuestion={handleNextQuestion} />
+        {/* <AlertTimeOut showAlertDialog={showAlertDialog} setShowAlertDialog={setShowAlertDialog} handleNextQuestion={handleNextQuestion} /> */}
       </View>
     </ScrollView>
   );

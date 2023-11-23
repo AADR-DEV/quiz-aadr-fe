@@ -118,15 +118,6 @@ export const questions = [
     },
     {
         id: "14",
-        image: "https://www.boredpanda.com/blog/wp-content/uploads/2018/09/25005865_2020513571493828_8387465560174100480_n-5bad4c74a9c19__880.jpgg",
-        quetion: "ini hewan apa?",
-        trueans: "Ayam",
-        falseans_1: "udang",
-        falseans_2: "gurita",
-        falseans_3: "cumi-cumi",
-    },
-    {
-        id: "15",
         image: "https://www.boredpanda.com/blog/wp-content/uploads/2018/09/25013786_311945612640806_3196306333741613056_n-5bad4c9ac2006__880.jpg",
         quetion: "Suka berdingin-dingin, hewan apa dia?",
         trueans: "Beruang Ayam",
