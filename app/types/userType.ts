@@ -8,6 +8,13 @@ export type InterfaceUser = {
     },
 };
 
+export type AllUserDiamond = {
+    data: {
+        username: string | undefined,
+        mainAvatar: string | undefined,
+        total_diamonds: number
+    }
+}
 
 
 // interface UserResponse {

@@ -13,12 +13,23 @@ import socket from '../../api/socket';
 import { useEffect } from 'react';
 import { useAppSelector } from '../../hooks/useRedux';
 import { selectAuth } from '../../store/auth';
+import { authApi, questionApi } from '../../api';
+import quizData from '../../api/dummyOption';
+import TypeWriter from '@sucho/react-native-typewriter';
 
 
 export default function HomePage({ navigation }: any) {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const user = useAppSelector(selectAuth);
+  const [connectSocket, setConnectSocket] = useState(false);
+
+  const { data } = questionApi.useGetQuestionsQuery();
+  // const { data } = quizData; //DummyData
+
+  // const quiz = data?.data
+
+  // console.log('data questions', quiz);
 
   //Untuk Refresh ketika ditarik kebawah
   const onRefresh = useCallback(async () => {
@@ -38,6 +49,7 @@ export default function HomePage({ navigation }: any) {
 
     socket.on('connect', () => {
       console.log('Connected to server');
+      setConnectSocket(true);
     });
 
   }, [navigation]);
@@ -81,6 +93,29 @@ export default function HomePage({ navigation }: any) {
         >
           {/* Users View */}
           <UserHome navigation={navigation} reshTrigger={refreshTrigger} />
+
+          {connectSocket ? (
+            <TypeWriter
+              textArray={['Youre Connect!', 'Ready to play!']}
+              loop
+              speed={100}
+              delay={500}
+              textStyle={{
+                fontSize: 15,
+                color: 'yellow',
+                textAlign: 'center',
+              }}
+              cursorStyle={{
+                fontSize: 0,
+              }}
+            />
+          ) : (
+            <Text
+              size='xs'
+              color='white'
+            >Server Disconnected</Text>
+          )}
+
 
           {/* Button Quiz */}
           <Button

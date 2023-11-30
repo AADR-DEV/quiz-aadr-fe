@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { UserInfo } from '../store/auth';
 import { DiamondCategory, DiamondInfo } from '../types/diamondCatTypes';
 import { AvatarCat, AvatarInfo } from '../types/avatarCatType';
+import { AllUserDiamond } from '../types/userType';
 
 export type GetUserAuthPayload = {
   email: string;
@@ -14,13 +15,14 @@ export interface GetUserAuthResponse extends UserInfo{}
 export interface GetDiamondCatResponse extends DiamondCategory{}
 export interface GetAvatarListResponse extends AvatarCat{}
 export interface GetAvatarCategoryResponse extends AvatarCat{}
+export interface GetAllUsersDiamondsResponse extends AllUserDiamond{}
 
 
 const authApi = createApi({
   reducerPath: 'authApiReducer',
   baseQuery: fetchBaseQuery({
-    // baseUrl: 'https://pc7zwqcw-5000.asse.devtunnels.ms', //Server Mas Akbar
-    baseUrl: 'https://4lrfl253-5000.asse.devtunnels.ms', //Server Sendiri
+    baseUrl: 'https://pc7zwqcw-5000.asse.devtunnels.ms', //Server Mas Akbar
+    // baseUrl: 'https://4lrfl253-5000.asse.devtunnels.ms', //Server Sendiri
   }),
   tagTypes: ['Auth'],
   endpoints: build => ({
@@ -105,6 +107,14 @@ const authApi = createApi({
       }),
       invalidatesTags: ['Auth'],
     }),
+    getAllUsersDiamond: build.query<GetAllUsersDiamondsResponse, void>({
+      query: () => ({
+        url: `/auth/user/leaderboard`,
+        method: 'GET',
+      }),
+      providesTags: ['Auth'],
+      forceRefetch: () => true,
+    })
   }),
 });
 

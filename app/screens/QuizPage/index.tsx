@@ -37,9 +37,6 @@ interface Question {
 }
 
 export default function QuizPage({ navigation }: any) {
-
-
-
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -51,21 +48,23 @@ export default function QuizPage({ navigation }: any) {
   const [key, setKey] = useState<number>(0);
   const user = useAppSelector(selectAuth);
   const [answerSocket, setAnswerSocket] = useState([])
-  const { data } = quizData;
+
+
+  // const { data } = quizData; //DummyData
+  const { data } = questionApi.useGetQuestionsQuery();
+  const quizData = data?.data
+
+  // console.log(quizData);
+
   const [resultCurrentQuestion, setResultCurrentQuestion] = useState(false);
   const [scoreAllPlayers, setScoreAllPlayers] = useState(0);
-
-  // Emmit
-  // 1. asnwers
-  // 2. quetionsID
-
 
   useEffect(() => {
 
     socket.emit(
       "answer",
       {
-        questionId: data[currentQuestionIndex].id,
+        questionId: quizData[currentQuestionIndex].id,
         questionAnswer: selectedAnswer
       }
     );
@@ -74,18 +73,6 @@ export default function QuizPage({ navigation }: any) {
       "answer",
       (answer) => { setAnswerSocket(answer); }
     );
-
-    // socket.once(
-    //   "score",
-    //   (score) => {
-    //     setScoreAllPlayers(score);
-    //   }
-    // );
-
-
-    // return () => {
-    //   socket.off("score");
-    // };
 
   }, [selectedAnswer, scoreAllPlayers]);
 
@@ -103,7 +90,7 @@ export default function QuizPage({ navigation }: any) {
   useEffect(() => {
     setIsLoading(true); // Aktifkan loading sebelum mengacak pertanyaan
 
-    const shuffledQuestions = data
+    const shuffledQuestions = quizData
       // .sort(() => 0.5 - Math.random())
       // .slice(0, 5)
       .map((q: any) => ({
@@ -144,7 +131,7 @@ export default function QuizPage({ navigation }: any) {
                 setKey(prevKey => prevKey + 1);
                 setTimer(10); // Reset waktu untuk ke pertanyaan selanjutnya
                 setSelectedAnswer('');
-              }, 3000)
+              }, 5000)
               setIsLoading(false); // Matikan loading setelah pindah ke pertanyaan berikutnya
             }, 500); // Atur durasi loading (dalam milidetik)
           }
@@ -184,9 +171,8 @@ export default function QuizPage({ navigation }: any) {
 
   if (finished) {
     return (
-      <View
+      <ScrollView
         flex={1}
-        alignItems="center"
         backgroundColor="$primaryBg"
         gap={'$3'}
         width={'100%'}
@@ -198,7 +184,7 @@ export default function QuizPage({ navigation }: any) {
           score={score}
           navigation={navigation}
           scoreAllPlayers={scoreAllPlayers} />
-      </View>
+      </ScrollView>
     );
   }
 
@@ -211,6 +197,7 @@ export default function QuizPage({ navigation }: any) {
         question={questions[currentQuestionIndex].question}
         options={questions[currentQuestionIndex].options}
         answerSocket={answerSocket}
+        trueAnswer={questions[currentQuestionIndex].trueans}
       />
     );
   }
@@ -244,7 +231,7 @@ export default function QuizPage({ navigation }: any) {
               textAlign="center"
               color="white"
               fontWeight="bold"
-            >Load Next Question...</Text>
+            >Waiting for results...</Text>
             <AppLottieView
               animation={require('./quiz_loading_animation.json')}
               autoPlay

@@ -57,7 +57,7 @@ export default function BuyAvatarPage({ navigation }: any) {
 
             const avatarPrice = Avatars.find((avatarInfo: any) => avatarInfo.id === getAvatarId)?.price;
 
-            if (totalDiamonds !== undefined && avatarPrice !== undefined && totalDiamonds < avatarPrice) {
+            if (totalDiamonds !== null && totalDiamonds !== '' && totalDiamonds !== undefined && avatarPrice !== undefined && totalDiamonds < avatarPrice) {
                 // Setelah kondisi terpenuhi, atur showAlertDialog menjadi true
                 setShowAlertDialog(true);
                 <AlertDiamonds showAlertDialog={showAlertDialog} setShowAlertDialog={setShowAlertDialog} />;

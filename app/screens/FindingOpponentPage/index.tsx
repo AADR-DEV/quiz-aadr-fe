@@ -250,7 +250,6 @@ export default function FindingOpponentPage({ navigation }: any) {
                         alt='Finding Opponent'
                       />
                     </Box>
-
                     <Text
                       fontWeight='bold'
                       fontSize="$lg"

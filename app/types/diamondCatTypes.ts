@@ -14,3 +14,4 @@ export type DiamondInfo = {
     userId: string;
     diamondCategoryId: string | undefined;
 };
+

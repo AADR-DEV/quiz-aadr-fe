@@ -21,9 +21,10 @@ export default function ResultQuizPage({
     imageQuestion,
     options,
     question,
-    answerSocket
+    answerSocket,
+    trueAnswer
 }: any) {
-    const [countdown, setCountdown] = useState(3);
+    const [countdown, setCountdown] = useState(5);
     const userAnswers = answerSocket;
 
     useEffect(() => {
@@ -114,12 +115,11 @@ export default function ResultQuizPage({
                                     const matchingUsers = userAnswers.filter(
                                         (user: any) => user.answers.some((answer: any) => answer.questionAnswer === option)
                                     );
-
                                     return (
                                         <Box key={index}>
                                             <Radio value={option}>
                                                 <RadioLabel
-                                                    bgColor='$tertiaryBg'
+                                                    bgColor={trueAnswer === option ? '$greenButton' : '$redButton'}
                                                     padding={'$3'}
                                                     rounded={'$md'}
                                                     width={'100%'}
