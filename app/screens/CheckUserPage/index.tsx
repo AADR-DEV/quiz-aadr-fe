@@ -5,6 +5,7 @@ import { selectAuth } from '../../store/auth';
 import authApi, { GetUserAuthPayload } from '../../api/authApi';
 import { Loading } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthStack } from '../../navigation';
 
 export default function CheckUserPage({ navigation }: any) {
     const user = useAppSelector(selectAuth);
@@ -15,16 +16,16 @@ export default function CheckUserPage({ navigation }: any) {
     //Android13
     if (!isLoading) {
         if (usernameUser === null || usernameUser === '' || usernameUser === undefined) {
-            navigation.navigate('Avatar');
+            return <AuthStack />;
         } else {
             navigation.navigate('Home');
         }
     }
 
-    AsyncStorage.getItem('userToken')
-        .then(token => {
-            console.log("CheckUserPage token = ", token);
-        });
+    // AsyncStorage.getItem('userToken')
+    //     .then(token => {
+    //         console.log("CheckUserPage token = ", token);
+    //     });
 
     return (
         <View

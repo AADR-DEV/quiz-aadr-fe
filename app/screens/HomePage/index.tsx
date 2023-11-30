@@ -9,10 +9,16 @@ import {
 } from '@gluestack-ui/themed';
 import { UserHome, LeaderBoard } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import socket from '../../api/socket';
+import { useEffect } from 'react';
+import { useAppSelector } from '../../hooks/useRedux';
+import { selectAuth } from '../../store/auth';
+
 
 export default function HomePage({ navigation }: any) {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const user = useAppSelector(selectAuth);
 
   //Untuk Refresh ketika ditarik kebawah
   const onRefresh = useCallback(async () => {
@@ -21,13 +27,35 @@ export default function HomePage({ navigation }: any) {
 
     try {
       const token = await AsyncStorage.getItem('userToken');
-      console.log("HomePage token = ", token);
     } catch (error) {
       console.error("Error on refreshing", error);
     } finally {
       setRefreshing(false);
     }
   }, []);
+
+  useEffect(() => {
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+    });
+
+  }, [navigation]);
+
+  const handlePlayQUiz = () => {
+    socket.emit(
+      'createPlayer',
+      {
+        id: user?.id,
+        username: user?.username,
+        avatar: user?.mainAvatar,
+        points: 0,
+        answers: []
+      }
+    )
+
+    navigation.navigate('FindingOpponent');
+  }
 
   return (
     <ScrollView
@@ -59,7 +87,8 @@ export default function HomePage({ navigation }: any) {
             rounded={'$full'}
             backgroundColor="$greenButton"
             width={'40%'}
-            onPress={() => navigation.navigate('FindingOpponent')}
+            onPress={handlePlayQUiz}
+          // onPress={() => navigation.navigate('Quiz')}
           >
             <ButtonText
               fontSize="$xl"

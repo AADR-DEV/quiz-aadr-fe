@@ -14,9 +14,7 @@ import { useEffect } from "react";
 export default function AvatarUser({ navigation, refreshTrigger }: any) {
     const currentUser = useAppSelector(selectAuth); // Data dari Redux
     const { data, refetch } = authApi.useGetUserAuthQuery({ email: currentUser?.email } as GetUserAuthPayload);
-
     const avatarUser = data && data.mainAvatar; // => Didapat dari get user di avatar
-    console.log("AvatarUser = " + avatarUser);
 
     useEffect(() => {
         refetch();

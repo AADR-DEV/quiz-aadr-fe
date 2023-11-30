@@ -1,4 +1,4 @@
-import { Box, HStack, Link, LinkText, Text, VStack, View, Image, Icon, CalendarDaysIcon } from '@gluestack-ui/themed';
+import { Box, HStack, Link, LinkText, Text, VStack, View, Image, Icon } from '@gluestack-ui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useAppSelector } from '../../hooks/useRedux';
 import { selectAuth } from '../../store/auth';
@@ -12,10 +12,7 @@ import { GetUserAuthPayload } from '../../api/authApi';
 export default function UserHome({ navigation, refreshTrigger }: any) {
     const user = useAppSelector(selectAuth);
     const { data } = authApi.useGetUserAuthQuery({ email: user?.email } as GetUserAuthPayload);
-
-    console.log("user = " + data);
     const userDiamonds = data && data.total_diamonds; // => Didapat dari get user di avatar
-    console.log("userDiamonds = " + userDiamonds);
 
     useEffect(() => {
         console.log("UserHome is refreshing");

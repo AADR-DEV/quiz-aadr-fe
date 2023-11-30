@@ -8,7 +8,7 @@ import AvatarUser from "./AvatarUser";
 import Loading from "./Loading";
 import AlertAvatar from "./AlertAvatar";
 import ScoreResult from "./ScoreResult";
-import AlertTimeOut from "./AlertTimeOut";
+import AlertDiamonds from "./AlertDiamonds";
 import AvatarPlayer from "./AvatarPlayer";
 
 export {
@@ -22,6 +22,6 @@ export {
     Loading,
     AlertAvatar,
     ScoreResult,
-    AlertTimeOut,
+    AlertDiamonds,
     AvatarPlayer,
 };

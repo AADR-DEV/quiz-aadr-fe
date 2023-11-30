@@ -1,21 +1,19 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import { authApi } from '../api';
-// import * as authRedux from './auth';
+import { authApi, questionApi } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authSlice } from './auth';
-import storage from 'redux-persist/lib/storage';
 
 const rootPersistConfig = {
   key: 'root',
   version: 1,
-  // blacklist: [baseApi.reducerPath],
   storage: AsyncStorage,
 };
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
+  [questionApi.reducerPath]: questionApi.reducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, reducers);
@@ -27,7 +25,9 @@ export const store = configureStore({
       immutableCheck: false,
       serializableCheck: false,
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    }).concat(authApi.middleware);
+    })
+    .concat(authApi.middleware)
+    .concat(questionApi.middleware);
   },
 });
 
