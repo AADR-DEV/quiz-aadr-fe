@@ -42,12 +42,12 @@ export default function QuizPage({ navigation }: any) {
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(20);
   const [isLoading, setIsLoading] = useState(false); // State untuk loading
   const [answerColors, setAnswerColors] = useState<string[]>([]);
   const [key, setKey] = useState<number>(0);
   const user = useAppSelector(selectAuth);
-  const [answerSocket, setAnswerSocket] = useState([])
+  const [answerSocket, setAnswerSocket] = useState([]);
 
 
   // const { data } = quizData; //DummyData
@@ -129,7 +129,7 @@ export default function QuizPage({ navigation }: any) {
                 setResultCurrentQuestion(false);
                 setCurrentQuestionIndex(nextIndex);
                 setKey(prevKey => prevKey + 1);
-                setTimer(10); // Reset waktu untuk ke pertanyaan selanjutnya
+                setTimer(20); // Reset waktu untuk ke pertanyaan selanjutnya
                 setSelectedAnswer('');
               }, 5000)
               setIsLoading(false); // Matikan loading setelah pindah ke pertanyaan berikutnya
@@ -261,7 +261,7 @@ export default function QuizPage({ navigation }: any) {
                 <CountdownCircleTimer
                   key={key}
                   isPlaying
-                  duration={10}
+                  duration={20}
                   updateInterval={0}
                   isSmoothColorTransition={true}
                   colors={['#95FF66', '#FFC2A6', '#FF6B5E', '#FF0000']}
@@ -307,51 +307,75 @@ export default function QuizPage({ navigation }: any) {
             <Box width={'100%'} alignItems="center" gap={'$2'}>
               <RadioGroup onChange={handleAnswerChange} value={selectedAnswer}>
                 <VStack gap={'$2'}>
-                  {questions[currentQuestionIndex]?.options?.map((option, index) => (
-                    <Box key={index}>
-                      <Radio value={option}>
-                        <RadioLabel
-                          backgroundColor={getAnswerBackgroundColor(index)}
-                          padding={'$3'}
-                          rounded={'$md'}
-                          width={'100%'}
-                          color="white"
-                          flexDirection="row">
-                          <Box flexDirection="row" alignItems="center" width={400}>
-                            <Box width={150}>
-                              <Text color="white" size="sm">
-                                {option}
-                              </Text>
-                            </Box>
-                            <Box
-                              width={90}
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="row"
-                              gap={'$1'}>
-                              {/* Avatar Enemy */}
-                              {/* <Avatar size="xs" bgColor="$amber600">
+                  {questions[currentQuestionIndex]?.options?.map((option, index) => {
+
+                    const matchingUsers = answerSocket.filter(
+                      (user: any) => user.answers.some((answer: any) => answer.questionAnswer === option)
+                    );
+
+                    return (
+                      <Box key={index}>
+                        <Radio value={option}>
+                          <RadioLabel
+                            backgroundColor={getAnswerBackgroundColor(index)}
+                            padding={'$3'}
+                            rounded={'$md'}
+                            width={'100%'}
+                            color="white"
+                            flexDirection="row">
+                            <Box flexDirection="row" alignItems="center" width={400}>
+                              <Box width={150}>
+                                <Text color="white" size="sm">
+                                  {option}
+                                </Text>
+                              </Box>
+                              <Box
+                                width={90}
+                                alignItems="center"
+                                justifyContent="center"
+                                flexDirection="row"
+                                gap={'$1'}>
+                                {/* Avatar Enemy */}
+                                {/* <Avatar size="xs" bgColor="$amber600">
                                 <AvatarFallbackText>
                                   {option}
                                 </AvatarFallbackText>
                               </Avatar> */}
-                              {/* Avatar Player */}
-                              {user && selectedAnswer === option && (
-                                <Avatar size="xs">
-                                  <AvatarImage
-                                    source={
-                                      user
-                                        ? { uri: user.mainAvatar }
-                                        : require('../../../assets/avatars/free_dog.png')
-                                    }></AvatarImage>
-                                </Avatar>
-                              )}
+                                {/* Avatar Player */}
+                                {/* {user && selectedAnswer === option && (
+                                  <Avatar size="xs">
+                                    <AvatarImage
+                                      source={
+                                        user
+                                          ? { uri: user.mainAvatar }
+                                          : require('../../../assets/avatars/free_dog.png')
+                                      }></AvatarImage>
+                                  </Avatar>
+                                )} */}
+
+                                {matchingUsers.map((user: any, userIndex: number) => (
+                                  <Avatar
+                                    key={userIndex}
+                                    size="xs"
+                                    bgColor="$amber600">
+                                    <AvatarFallbackText>
+                                      {user.username}
+                                    </AvatarFallbackText>
+                                    <AvatarImage
+                                      source={
+                                        user
+                                          ? { uri: user.avatar }
+                                          : require('../../../assets/avatars/free_dog.png')
+                                      }></AvatarImage>
+                                  </Avatar>
+                                ))}
+                              </Box>
                             </Box>
-                          </Box>
-                        </RadioLabel>
-                      </Radio>
-                    </Box>
-                  ))}
+                          </RadioLabel>
+                        </Radio>
+                      </Box>
+                    )
+                  })}
                 </VStack>
               </RadioGroup>
             </Box>
