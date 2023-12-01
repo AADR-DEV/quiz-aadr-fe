@@ -9,25 +9,65 @@ import {
 } from '@gluestack-ui/themed';
 import { UserHome, LeaderBoard } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import socket from '../../api/socket';
+import { useEffect } from 'react';
+import { useAppSelector } from '../../hooks/useRedux';
+import { selectAuth } from '../../store/auth';
+import { authApi, questionApi } from '../../api';
+import quizData from '../../api/dummyOption';
+import TypeWriter from '@sucho/react-native-typewriter';
+
 
 export default function HomePage({ navigation }: any) {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const user = useAppSelector(selectAuth);
+  const [connectSocket, setConnectSocket] = useState(false);
+
+  const { data } = questionApi.useGetQuestionsQuery();
+  // const { data } = quizData; //DummyData
+
+  // const quiz = data?.data
+
+  // console.log('data questions', quiz);
 
   //Untuk Refresh ketika ditarik kebawah
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
+    setRefreshing(false);
     setRefreshTrigger(prev => prev + 1);
 
     try {
       const token = await AsyncStorage.getItem('userToken');
-      console.log("HomePage token = ", token);
     } catch (error) {
       console.error("Error on refreshing", error);
     } finally {
       setRefreshing(false);
     }
   }, []);
+
+  useEffect(() => {
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      setConnectSocket(true);
+    });
+
+  }, [navigation]);
+
+  const handlePlayQUiz = () => {
+    socket.emit(
+      'createPlayer',
+      {
+        id: user?.id,
+        username: user?.username,
+        avatar: user?.mainAvatar,
+        points: 0,
+        answers: []
+      }
+    )
+
+    navigation.navigate('FindingOpponent');
+  }
 
   return (
     <ScrollView
@@ -54,12 +94,36 @@ export default function HomePage({ navigation }: any) {
           {/* Users View */}
           <UserHome navigation={navigation} reshTrigger={refreshTrigger} />
 
+          {connectSocket ? (
+            <TypeWriter
+              textArray={['Youre Connect!', 'Ready to play!']}
+              loop
+              speed={100}
+              delay={500}
+              textStyle={{
+                fontSize: 15,
+                color: 'yellow',
+                textAlign: 'center',
+              }}
+              cursorStyle={{
+                fontSize: 0,
+              }}
+            />
+          ) : (
+            <Text
+              size='xs'
+              color='white'
+            >Server Disconnected</Text>
+          )}
+
+
           {/* Button Quiz */}
           <Button
             rounded={'$full'}
             backgroundColor="$greenButton"
             width={'40%'}
-            onPress={() => navigation.navigate('FindingOpponent')}
+            onPress={handlePlayQUiz}
+          // onPress={() => navigation.navigate('Quiz')}
           >
             <ButtonText
               fontSize="$xl"

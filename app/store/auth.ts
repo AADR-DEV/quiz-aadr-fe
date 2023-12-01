@@ -5,10 +5,13 @@ import { authApi } from '../api';
 import { GetUserAuthResponse } from '../api/authApi';
 
 export type UserInfo = {
-  email: string | null,
+  id: string,
   name: string | null,
-  avatar: string | null,
   username: string | null,
+  email: string | null,
+  mainAvatar: string | null,
+  avatars: string[];
+  total_diamonds: number,
 }
 
 export type AuthState = {
@@ -19,10 +22,13 @@ export type AuthState = {
 export const initialState: AuthState = {
   isLoading: false,
   userInfo: {
-    email: '',
+    id: '',
     name: '',
-    avatar: '',
     username: '',
+    email: '',
+    mainAvatar: '',
+    avatars: [],
+    total_diamonds: 0,
   },
 };
 
@@ -39,7 +45,6 @@ export const authSlice = createSlice({
       state.userInfo = null
     },
     session: (state: Pick<AuthState, 'userInfo'>, action: PayloadAction<Pick<AuthState, 'userInfo'>>) => {
-      // Ensure userInfo is not null before accessing it
       if (state.userInfo && action.payload.userInfo) {
         state.userInfo.username = action.payload.userInfo.username;
       }

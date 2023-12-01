@@ -8,6 +8,8 @@ import LeaderBoard from '../components/LeaderBoard';
 import CheckUserPage from './CheckUserPage';
 import BuyAvatarPage from './BuyAvatarPage';
 import FindingOpponentPage from './FindingOpponentPage';
+import RoomPage from './RoomPage';
+import ResultQuizPage from './ResultQuizPage';
 
 export {
     LoginPage,
@@ -20,4 +22,6 @@ export {
     CheckUserPage,
     BuyAvatarPage,
     FindingOpponentPage,
+    RoomPage,
+    ResultQuizPage
 };

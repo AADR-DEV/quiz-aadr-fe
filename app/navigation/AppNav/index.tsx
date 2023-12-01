@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { useContext } from 'react';
+import { useEffect } from 'react';
 import { View, Spinner, Text } from '@gluestack-ui/themed';
 import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
@@ -10,7 +10,7 @@ import { AuthStack, AppStack } from '../index';
 
 
 
-export default function AppNav() {
+export default function AppNav({ navigation }: any) {
     const user = useAppSelector(selectAuth)
     const isLoading = useAppSelector(selectLoading)
 
@@ -25,6 +25,27 @@ export default function AppNav() {
 
     const userToken = user && userTokenFromStorage()
     console.log('userToken', userToken)
+
+    const isLoggedIn = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token) {
+                const username = await AsyncStorage.getItem('userUsername');
+                console.log("Login Page username = ", username);
+                if (username === null || username === '') {
+                    navigation.navigate('Avatar');
+                } else {
+                    navigation.navigate('Home');
+                }
+            }
+        } catch (error) {
+            console.log('Login Error:', error);
+        }
+    };
+
+    useEffect(() => {
+        isLoggedIn();
+    }, []);
 
     if (isLoading) {
         return (
@@ -55,7 +76,7 @@ export default function AppNav() {
 
     return (
         <NavigationContainer >
-            {userToken !== null
+            {user && userToken !== null
                 ? <AppStack />
                 : <AuthStack />
             }

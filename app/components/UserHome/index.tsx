@@ -1,16 +1,18 @@
-import { Box, HStack, Link, LinkText, Text, VStack, View, Image, Icon, CalendarDaysIcon } from '@gluestack-ui/themed';
+import { Box, HStack, Link, LinkText, Text, VStack, View, Image, Icon } from '@gluestack-ui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useAppSelector } from '../../hooks/useRedux';
 import { selectAuth } from '../../store/auth';
 import { AppLottieView, AvatarUser } from '..';
 import { Plus } from 'lucide-react-native';
 import { useEffect } from 'react';
+import { authApi } from '../../api';
+import { GetUserAuthPayload } from '../../api/authApi';
 
 
 export default function UserHome({ navigation, refreshTrigger }: any) {
-    const user = useAppSelector(selectAuth)
-
-    console.log("UserHome = ", user);
+    const user = useAppSelector(selectAuth);
+    const { data } = authApi.useGetUserAuthQuery({ email: user?.email } as GetUserAuthPayload);
+    const userDiamonds = data && data.total_diamonds; // => Didapat dari get user di avatar
 
     useEffect(() => {
         console.log("UserHome is refreshing");
@@ -79,7 +81,7 @@ export default function UserHome({ navigation, refreshTrigger }: any) {
                         />
                         <Text
                             color='$white'
-                        >20</Text>
+                        >{userDiamonds}</Text>
                         <Icon
                             color="white"
                             size="md"

@@ -8,11 +8,9 @@ import {
   CheckUserPage,
   FindingOpponentPage,
   BuyAvatarPage,
+  RoomPage,
 } from '../../screens';
 import { LogoutButton } from '../../components';
-
-
-
 
 export default function AppStack() {
   const Stack = createStackNavigator();
@@ -61,6 +59,7 @@ export default function AppStack() {
           headerLeft: () => null, //menghilangkan arrow back
           headerTitle: 'Quiz',
           headerTintColor: 'white',
+          headerShown: false,
           headerStyle: {
             backgroundColor: '#5a4ad3',
           },
@@ -105,7 +104,20 @@ export default function AppStack() {
           },
         }}
       />
-      {/* FindingEnemy */}
+      {/* CreateRoom */}
+      <Stack.Screen
+        name="CreateRoom"
+        component={RoomPage}
+        options={{
+          headerLeft: () => null, //menghilangkan arrow back
+          headerTitle: 'Room',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#5a4ad3',
+          },
+        }}
+      />
+      {/* BuyAvatar */}
       <Stack.Screen
         name="BuyAvatar"
         component={BuyAvatarPage}
