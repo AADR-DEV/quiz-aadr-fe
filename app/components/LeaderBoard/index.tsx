@@ -28,20 +28,20 @@ export default function LeaderBoard() {
         {
             avatarSize: 'md',
             avatarMarginBottom: '$6',
-            imageWidth: 70,
-            imageHeight: 65,
+            imageWidth: 85,
+            imageHeight: 85,
         },
         {
             avatarSize: 'md', // Ubah ukuran avatar menjadi 'md' untuk indeks 0
             avatarMarginBottom: '$6',
-            imageWidth: 70,
-            imageHeight: 55,
+            imageWidth: 85,
+            imageHeight: 60,
         },
         {
             avatarSize: 'sm', // Ubah ukuran avatar menjadi 'sm' untuk indeks 2
             avatarMarginBottom: '$4',
-            imageWidth: 70,
-            imageHeight: 35,
+            imageWidth: 85,
+            imageHeight: 45,
         },
     ];
 
@@ -110,7 +110,6 @@ export default function LeaderBoard() {
                         justifyContent="center"
                         alignItems="center"
                         w={'100%'}
-                        gap={'$5'}
                     >
                         {topThreeUsersDiamonds.map((user, index) => (
                             <Box

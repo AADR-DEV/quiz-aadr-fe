@@ -10,6 +10,7 @@ import AlertAvatar from "./AlertAvatar";
 import ScoreResult from "./ScoreResult";
 import AlertDiamonds from "./AlertDiamonds";
 import AvatarPlayer from "./AvatarPlayer";
+import WebviewMidtrans from "./WebviewMidtrans";
 
 export {
     AppLottieView,
@@ -24,4 +25,5 @@ export {
     ScoreResult,
     AlertDiamonds,
     AvatarPlayer,
+    WebviewMidtrans,
 };

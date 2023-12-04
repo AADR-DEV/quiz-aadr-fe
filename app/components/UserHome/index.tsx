@@ -50,7 +50,7 @@ export default function UserHome({ navigation, refreshTrigger }: any) {
                         <Text
                             fontSize="$md"
                             fontWeight="bold"
-                            color="$greenButton"
+                            color="$yellow300"
                         >{user && user.username}</Text>
 
 

@@ -274,22 +274,6 @@ export default function FindingOpponentPage({ navigation }: any) {
                       }}
                       bgColor="red"
                     />
-
-                    {/* <Button
-                      rounded={'$2xl'}
-                      backgroundColor="$tertiaryButton"
-                      onPress={() => {
-                        navigation.navigate('Home');
-                      }}
-                    >
-                      <Text
-                        color="white"
-                        fontWeight="semibold"
-                        fontSize="$md"
-                      >
-                        back to home
-                      </Text>
-                    </Button> */}
                   </Box>
                 </ImageBackground>
               </View>
