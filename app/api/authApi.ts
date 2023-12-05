@@ -21,8 +21,8 @@ export interface GetAllUsersDiamondsResponse extends AllUserDiamond{}
 const authApi = createApi({
   reducerPath: 'authApiReducer',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://pc7zwqcw-5000.asse.devtunnels.ms', //Server Mas Akbar
-    // baseUrl: 'https://4lrfl253-5000.asse.devtunnels.ms', //Server Sendiri
+    // baseUrl: 'https://pc7zwqcw-5000.asse.devtunnels.ms', //Server Mas Akbar
+    baseUrl: 'https://4lrfl253-5000.asse.devtunnels.ms', //Server Sendiri
   }),
   tagTypes: ['Auth'],
   endpoints: build => ({

@@ -44,7 +44,7 @@ export default function AppStack() {
               <LogoutButton />
             )
           },
-          headerTitle: 'Quiz',
+          headerTitle: 'QRich',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#5a4ad3',
